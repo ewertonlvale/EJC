@@ -4,13 +4,294 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EJC - Paróquia Nossa Senhora da Conceição Aparecida</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="shortcut icon" type="image/png" href="favicon.png">
+    <link rel="apple-touch-icon" href="favicon.png">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        html, body { width: 100%; height: 100%; overflow: hidden; }
-        iframe { width: 100%; height: 100%; border: none; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #1a2d4d 0%, #1a5276 50%, #2e86c1 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.98);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            padding: 30px 20px;
+            animation: fadeIn 0.8s ease;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 30px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .logo-container { flex-shrink: 0; }
+        .logo-container img {
+            max-width: 150px;
+            height: auto;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+        }
+
+        .header-text { text-align: center; }
+        .header h1 {
+            color: #1a5276;
+            font-size: 2.5rem;
+            margin: 0 0 8px 0;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .header p {
+            color: #1a2d4d;
+            font-size: 1.05rem;
+            font-weight: 500;
+            margin: 3px 0;
+        }
+        .header p:first-of-type { font-size: 1.1rem; font-weight: 600; }
+
+        .menu-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 50px 20px;
+        }
+
+        .menu-item {
+            background: white;
+            border-radius: 20px;
+            padding: 50px 40px;
+            text-align: center;
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.25);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            border: 3px solid transparent;
+            position: relative;
+            overflow: hidden;
+            max-width: 420px;
+            width: 100%;
+            animation: fadeInUp 0.7s ease forwards;
+            opacity: 0;
+            animation-delay: 0.2s;
+        }
+
+        .menu-item::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(26, 82, 118, 0.1), transparent);
+            transition: left 0.5s;
+        }
+        .menu-item:hover::before { left: 100%; }
+        .menu-item:hover {
+            transform: translateY(-12px) scale(1.02);
+            box-shadow: 0 20px 50px rgba(26, 82, 118, 0.3);
+            border-color: #1a5276;
+        }
+
+        .menu-item-icon {
+            font-size: 4.5rem;
+            margin-bottom: 25px;
+            transition: transform 0.3s ease;
+            display: inline-block;
+        }
+        .menu-item:hover .menu-item-icon { transform: scale(1.15) rotate(5deg); }
+
+        .menu-item-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #1a5276;
+            margin-bottom: 15px;
+        }
+        .menu-item:hover .menu-item-title { color: #2e86c1; }
+
+        .menu-item-description {
+            color: #555;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        .menu-item-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #1a5276, #2e86c1);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin-top: 15px;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(26, 82, 118, 0.3);
+        }
+
+        .footer {
+            background: rgba(26, 45, 77, 0.95);
+            color: white;
+            text-align: center;
+            padding: 25px 20px;
+            font-size: 0.95rem;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
+        }
+        .footer p { margin: 5px 0; }
+        .footer p:first-child { font-weight: 600; font-size: 1rem; }
+
+        /* LGPD */
+        .lgpd-banner {
+            display: none;
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            z-index: 10000;
+            background: rgba(26, 45, 77, 0.97);
+            backdrop-filter: blur(10px);
+            color: white;
+            padding: 20px;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.4s ease;
+        }
+        .lgpd-banner.show { display: block; }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .lgpd-content {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .lgpd-text { flex: 1; min-width: 250px; font-size: 0.9rem; line-height: 1.5; }
+        .lgpd-buttons { display: flex; gap: 10px; flex-shrink: 0; }
+
+        .lgpd-btn {
+            padding: 10px 24px;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s;
+        }
+        .lgpd-btn-accept { background: white; color: #1a2d4d; }
+        .lgpd-btn-accept:hover { background: #eaf2f8; transform: translateY(-1px); }
+        .lgpd-btn-reject { background: transparent; color: white; border: 2px solid rgba(255,255,255,0.5); }
+        .lgpd-btn-reject:hover { border-color: white; background: rgba(255,255,255,0.1); }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        @media (max-width: 768px) {
+            .header { text-align: center; }
+            .header-content { flex-direction: column; gap: 20px; }
+            .header h1 { font-size: 1.7rem; }
+            .header p { font-size: 0.95rem; }
+            .logo-container img { max-width: 100px; }
+            .menu-item { padding: 35px 25px; }
+            .menu-item-icon { font-size: 3.5rem; }
+            .menu-item-title { font-size: 1.4rem; }
+            .lgpd-content { flex-direction: column; text-align: center; }
+            .lgpd-buttons { justify-content: center; width: 100%; }
+        }
     </style>
 </head>
 <body>
-    <iframe src="https://script.google.com/macros/s/AKfycbwo8jU4yLGuVVFhZT8aM0Ga3QwSwSEyyXprVGkZH22z9k8aMwjtggSPQrIQzt9lQayZ/exec?page=ejc" allow="camera *; microphone *"></iframe>
+    <div class="header">
+        <div class="header-content">
+            <div class="logo-container">
+                <img src="logo_ejc.png" alt="Logo EJC">
+            </div>
+            <div class="header-text">
+                <h1>✝️ EJC</h1>
+                <p>Encontro de Jovens com Cristo</p>
+                <p>Paróquia Nossa Senhora da Conceição Aparecida</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="menu-container">
+        <a href="site_ficha_ejc.html" class="menu-item">
+            <div class="menu-item-icon">📋</div>
+            <div class="menu-item-title">Ficha Cadastral</div>
+            <div class="menu-item-description">
+                Preencha sua ficha cadastral com seus dados pessoais, informações dos pais e habilidades
+            </div>
+            <span class="menu-item-badge">Acesso Rápido</span>
+        </a>
+    </div>
+
+    <div class="footer">
+        <p>© 2026 EJC - Paróquia Nossa Senhora da Conceição Aparecida</p>
+        <p>Todos os direitos reservados</p>
+    </div>
+
+    <div class="lgpd-banner" id="lgpdBanner">
+        <div class="lgpd-content">
+            <div class="lgpd-text">
+                🍪 Este site utiliza cookies para análise de uso e melhorias.
+                Seus dados não são compartilhados com terceiros.
+                Ao aceitar, você concorda com o uso de cookies de análise.
+            </div>
+            <div class="lgpd-buttons">
+                <button class="lgpd-btn lgpd-btn-accept" id="lgpdAccept">Aceitar</button>
+                <button class="lgpd-btn lgpd-btn-reject" id="lgpdReject">Recusar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var GA_ID = 'G-XXXXXXXXXX'; // TODO: substituir pelo ID do GA do EJC
+        var LGPD_KEY = 'ejc_lgpd_consent';
+
+        function getConsent() { try { return localStorage.getItem(LGPD_KEY); } catch(e) { return null; } }
+        function setConsent(v) { try { localStorage.setItem(LGPD_KEY, v); } catch(e) {} }
+
+        function loadGA() {
+            if (document.querySelector('script[src*="googletagmanager"]')) return;
+            var s = document.createElement('script'); s.async = true;
+            s.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_ID;
+            document.head.appendChild(s);
+            window.dataLayer = window.dataLayer || [];
+            function gtag() { window.dataLayer.push(arguments); }
+            window.gtag = gtag; gtag('js', new Date()); gtag('config', GA_ID);
+        }
+
+        function removeGACookies() {
+            ['_ga','_gid','_gat'].forEach(function(n) {
+                document.cookie = n+'=;expires=Thu,01 Jan 1970 00:00:00 UTC;path=/;';
+                document.cookie = n+'=;expires=Thu,01 Jan 1970 00:00:00 UTC;path=/;domain=.'+location.hostname;
+            });
+        }
+
+        var consent = getConsent();
+        if (consent === 'accepted') loadGA();
+        else if (consent === null) setTimeout(function() { document.getElementById('lgpdBanner').classList.add('show'); }, 1000);
+
+        document.getElementById('lgpdAccept').addEventListener('click', function() {
+            setConsent('accepted'); loadGA(); document.getElementById('lgpdBanner').classList.remove('show');
+        });
+        document.getElementById('lgpdReject').addEventListener('click', function() {
+            setConsent('rejected'); removeGACookies(); document.getElementById('lgpdBanner').classList.remove('show');
+        });
+    </script>
 </body>
 </html>
